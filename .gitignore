@@ -1,4 +1,8 @@
 .DS_Store
 
+__pycache__/
+
 # imdb_converted.npz is too large to be stored on GitHub, so we ignore it
 sentiment-analysis/data/imdb_converted.npz
+
+sentiment-analysis/nn/
