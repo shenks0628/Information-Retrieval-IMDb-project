@@ -56,7 +56,8 @@ class embeddingDB:
             vectorstore.save_local(index_path)
 
     def update_faiss_db_npz(self):
-        npzs = [f for f in os.listdir(self.upload_dir) if f.endswith(".npz")]
+        # npzs = [f for f in os.listdir(self.upload_dir) if f.endswith(".npz")]
+        npzs = ["imdb_converted.npz"]
         for npz in npzs:
             data = np.load(os.path.join(self.upload_dir, npz), allow_pickle=True)
             x_train = data['x_train']
