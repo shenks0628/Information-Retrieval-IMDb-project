@@ -1,4 +1,4 @@
-# Usage: python IMDb-convert.py
+# Usage: python keras-IMDb-convert.py
 # Description: This script converts the IMDb dataset on keras into a more readable format.
 # 
 # The dataset and word index are already downloaded using functions from tf.keras.datasets.imdb (Data Sources),
