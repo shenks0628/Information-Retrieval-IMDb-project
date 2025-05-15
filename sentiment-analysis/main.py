@@ -26,13 +26,15 @@ if __name__ == "__main__":
     print(f"Best val_acc model:")
     print(f"Structure: {hp.get('structure')}; Learning rate: {hp.get('learning_rate')}")
 
-    (test_ac, test_cm) = nn.evaluate(x_test, y_test)
-    (self_ac, self_cm) = nn.evaluate(self_x, self_y)
+    (test_ac, test_cm, test_cr) = nn.evaluate(x_test, y_test)
+    (self_ac, self_cm, self_cr) = nn.evaluate(self_x, self_y)
 
     print(f"Test accuracy on keras test set: {test_ac}")
     print(f"Test accuracy on self test set: {self_ac}")
     print(f"Test confusion matrix on keras test set:\n{test_cm}")
     print(f"Test confusion matrix on self test set:\n{self_cm}")
+    print(f"Test classification report on keras test set:\n{test_cr}")
+    print(f"Test classification report on self test set:\n{self_cr}")
 
     current_time = time.strftime("%Y%m%d_%H%M%S")
     print(f"Saving model to models/{hp.get('structure')}_{hp.get('learning_rate')}_{current_time}.keras")

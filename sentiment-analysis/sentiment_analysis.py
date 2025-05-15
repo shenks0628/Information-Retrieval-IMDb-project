@@ -2,7 +2,7 @@ import os
 import keras_tuner
 import keras
 from sklearn import model_selection
-from sklearn.metrics import accuracy_score, confusion_matrix
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
 
 class customNN:
     def __init__(self, input_dim, x_train, y_train, tuner_dir='.', project_name='nn', val_split=0.2, random_state=42, patience=5, max_epochs=50):
@@ -169,7 +169,8 @@ class customNN:
         y_pred = (y_pred > 0.5).astype(int)
         accuracy = accuracy_score(y_test, y_pred)
         cm = confusion_matrix(y_test, y_pred)
-        return (accuracy, cm)
+        cr = classification_report(y_test, y_pred)
+        return (accuracy, cm, cr)
     
     def predict(self, x):
         if self.best_model is None:
