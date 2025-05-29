@@ -8,6 +8,7 @@
 # python IMDb-crawler.py --id tt15398776 --test_mode                : test_mode enabled using the default number of threads
 # python IMDb-crawler.py --id tt15398776 --threads 8                : number of threads set to 8 and test_mode disabled
 # python IMDb-crawler.py --id tt15398776 --test_mode --threads 8    : test_mode enabled using 8 threads
+# python IMDb-crawler.py --id tt15398776 tt0092099 --threads 8     : crawling multiple IMDb IDs with 8 threads
 
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
@@ -199,21 +200,25 @@ class IMDb_crawler:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="IMDb Crawler")
-    parser.add_argument("--id", type=str, required=True, help="IMDb ID of the movie")
+    parser.add_argument("--id", type=str, nargs='+', required=True, help="IMDb ID(s) of the movie(s)")
     parser.add_argument("--threads", type=int, default=4, help="Number of threads to use for crawling (default: 4)")
     parser.add_argument("--test_mode", action='store_true', help="Enable test mode for faster execution")
     args = parser.parse_args()
 
     start_time = time.time()
 
-    crawler = IMDb_crawler(args.id, args.threads, args.test_mode)
-    # crawler.open_browser()
-    crawler.change_to_reviews()
-    crawler.get_metadata()
-    crawler.load_json()
-    crawler.get_reviews()
-    crawler.write_json()
-    crawler.close_browser()
+    for imdb_id in args.id:
+        print(f"Starting crawl for IMDb ID: {imdb_id}")
+        # Create a new instance of the IMDb_crawler for each ID
+        crawler = IMDb_crawler(imdb_id, args.threads, args.test_mode)
+        # crawler.open_browser()
+        crawler.change_to_reviews()
+        crawler.get_metadata()
+        crawler.load_json()
+        crawler.get_reviews()
+        crawler.write_json()
+        crawler.close_browser()
+        print(f"Finished crawl for IMDb ID: {imdb_id}\n")
 
     end_time = time.time()
     print(f"started at {time.ctime(start_time)}")
