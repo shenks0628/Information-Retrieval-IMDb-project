@@ -8,7 +8,7 @@
 # python IMDb-crawler.py --id tt15398776 --test_mode                : test_mode enabled using the default number of threads
 # python IMDb-crawler.py --id tt15398776 --threads 8                : number of threads set to 8 and test_mode disabled
 # python IMDb-crawler.py --id tt15398776 --test_mode --threads 8    : test_mode enabled using 8 threads
-# python IMDb-crawler.py --id tt15398776 tt0092099 --threads 8     : crawling multiple IMDb IDs with 8 threads
+# python IMDb-crawler.py --id tt15398776 tt0092099 --threads 8      : crawling multiple IMDb IDs with 8 threads
 
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
