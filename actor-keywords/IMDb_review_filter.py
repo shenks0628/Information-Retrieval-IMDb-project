@@ -6,11 +6,39 @@ def split_sentences(text):
     sentences = re.split(r'(?<=[.!?]) +', text)
     return [s.strip() for s in sentences if s.strip()]
 
-keywords = ["Tom Cruise", "Ethan Hunt", "Ethan", "Hunt", "Tom", "Cruise"]
-# keywords = ["Daniel Radcliffe", "Harry Potter", "Harry", "Potter", "Daniel", "Radcliffe"]
+full_keywords = {
+    "Tom Cruise": {
+        "Mission-Impossible": ["Ethan Hunt", "Ethan", "Hunt", "Tom Cruise", "Tom", "Cruise"],
+        "Top-Gun": ["Pete Mitchell", "Maverick", "Pete", "Mitchell", "Tom Cruise", "Tom", "Cruise"],
+        "Edge-of-Tomorrow": ["Cage", "Tom Cruise", "Tom", "Cruise"],
+        "Oblivion": ["Jack", "Tom Cruise", "Tom", "Cruise"],
+    },
+    "Daniel Radcliffe": {
+        "Harry-Potter": ["Harry Potter", "Harry", "Potter", "Daniel Radcliffe", "Daniel", "Radcliffe"],
+    },
+    "Morgan Freeman": {
+        "The-Shawshank-Redemption": ["Red", "Morgan Freeman", "Morgan", "Freeman"],
+        "Batman-Begins": ["Lucius Fox", "Lucius", "Fox", "Morgan Freeman", "Morgan", "Freeman"],
+        "The-Dark-Knight": ["Lucius Fox", "Lucius", "Fox", "Morgan Freeman", "Morgan", "Freeman"],
+        "Oblivion": ["Beech", "Morgan Freeman", "Morgan", "Freeman"],
+        "Now-You-See-Me": ["Thaddeus Bradley", "Thaddeus", "Bradley", "Morgan Freeman", "Morgan", "Freeman"],
+        "London-Has-Fallen": ["President Trumbull", "Allan Trumbull", "Allan", "Trumbull", "Morgan Freeman", "Morgan", "Freeman"],
+        "Angel-Has-Fallen": ["President Trumbull", "Allan Trumbull", "Allan", "Trumbull", "Morgan Freeman", "Morgan", "Freeman"],
+    },
+}
 
-json_files = glob.glob("../data/Mission-Impossible*.json")
+# actor = "Tom Cruise"
+# actor = "Daniel Radcliffe"
+actor = "Morgan Freeman"
+
+output_file = f"data/{actor.replace(' ', '')}.json"
+
+# json_files = glob.glob("../data/Mission-Impossible*.json") + glob.glob("../data/Top-Gun*.json") + glob.glob("../data/Edge-of-Tomorrow*.json") + glob.glob("../data/Oblivion*.json")
 # json_files = glob.glob("../data/Harry-Potter*.json")
+json_files = glob.glob("../data/The-Shawshank-Redemption*.json") + glob.glob("../data/Batman-Begins*.json") + glob.glob("../data/The-Dark-Knight*.json") + glob.glob("../data/Oblivion*.json") + glob.glob("../data/Now-You-See-Me*.json") + glob.glob("../data/London-Has-Fallen*.json") + glob.glob("../data/Angel-Has-Fallen*.json")
+
+actor_keywords = full_keywords.get(actor, {})
+movies = list(actor_keywords.keys())
 
 filter_complete_reviews = []
 filter_split_reviews = []
@@ -19,12 +47,17 @@ movie_ids = set()
 
 for file in json_files:
     print(f"Processing file: {file}")
+    keywords = []
+    for movie in movies:
+        if movie in file:
+            keywords = actor_keywords[movie]
+            break
     with open(file, 'r', encoding='utf-8') as f:
         data = json.load(f)
-    # 收集電影資訊
+
     movie_titles.add(data["metadata"].get("movie_title", ""))
     movie_ids.add(data["metadata"].get("movie_imdb_id", ""))
-    # 篩選評論
+    
     for group in data["reviews"].values():
         for review in group:
             text = (review.get("content", "")).lower()
@@ -43,9 +76,6 @@ output = {
     "complete_reviews": filter_complete_reviews,
     "split_reviews": filter_split_reviews
 }
-
-output_file = 'data/TomCruise.json'
-# output_file = 'data/DanielRadcliffe.json'
 
 with open(output_file, 'w', encoding='utf-8') as f:
     json.dump(output, f, ensure_ascii=False, indent=4)
